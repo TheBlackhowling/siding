@@ -30,9 +30,8 @@ Checksums in `checksums.txt` (Ed25519 signature in `checksums.txt.sig`).
 Version/commit/date are stamped into `siding version`.
 
 CI: [`.github/workflows/release.yml`](../.github/workflows/release.yml) on tags
-`v*`. Config: [`.goreleaser.yaml`](../.goreleaser.yaml) (`release.github.name:
-siding`). GoReleaser uses the workflow **`GITHUB_TOKEN`** (no separate publish
-PAT).
+`v*`. Config: [`.goreleaser.yaml`](../.goreleaser.yaml) publishes assets to this
+repo.
 
 ## Release notes
 
