@@ -12,7 +12,7 @@ const checksumSigAsset = "checksums.txt.sig"
 // checksumSignPublicKey verifies checksums.txt on release downloads.
 // Regenerate with: go run ./scripts/gen-checksum-keypair
 // Store the seed in CI as SIDING_CHECKSUM_SIGN_SEED (never commit it).
-var checksumSignPublicKey = mustDecodePubKey("c6af5756b3115bb771a647059681647e7352937f7bc23c1c22b5f4bce4cb581d")
+var checksumSignPublicKey = mustDecodePubKey("6f9e8fa1318dc83c4cf4dcb3b32714972cbf612eb545160be01dcd07171ce9e5")
 
 func mustDecodePubKey(hexKey string) ed25519.PublicKey {
 	b, err := hex.DecodeString(hexKey)
