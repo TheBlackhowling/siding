@@ -41,9 +41,7 @@ GoReleaser attaches the six archives to that release.
 
 ## One-time: secrets
 
-On **`TheBlackhowling/siding`** (or your release repo) Actions secrets:
-
-**Not required:** a separate publish PAT (`GORELEASER_GITHUB_TOKEN`). This repo uses the workflow `GITHUB_TOKEN`.
+On **`TheBlackhowling/siding`** → Settings → Secrets and variables → Actions:
 
 **macOS sign + notarize** (all five, or none: empty skips signing):
 
@@ -110,7 +108,18 @@ git checkout main
 .\scripts\release.ps1 patch -DryRun
 ```
 
-The first tag is always `v0.1.0`. After that, the script uses the highest `vMAJOR.MINOR.PATCH` tag (prerelease tags like `v0.1.0-rc.1` are ignored). `-Force` tags the current branch instead of requiring `main`.
+The first tag on an empty repo is `v0.1.0`. After that, the script uses the highest `vMAJOR.MINOR.PATCH` tag (prerelease tags like `v0.1.0-rc.1` are ignored). `-Force` tags the current branch instead of requiring `main`.
+
+**Continuing after `siding-releases`:** If binaries already shipped elsewhere (for example `v0.1.8` on `TheBlackhowling/siding-releases`) and this repo has no tags yet, seed the lineage so the next cut is not `v0.1.0`:
+
+```powershell
+git tag v0.1.8
+git push origin v0.1.8
+.\scripts\release.ps1 patch -DryRun   # expect v0.1.9
+.\scripts\release.ps1 patch
+```
+
+The seed tag only needs to exist on the remote; it marks the previous public version. Say in release notes that downloads moved to this repo.
 
 3. The script creates a GitHub Release on **this repo** (`--generate-notes`) and
    appends Go library import instructions (same tag as the CLI).
