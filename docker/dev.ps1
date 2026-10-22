@@ -73,11 +73,11 @@ switch ($Command) {
             New-Item -ItemType Directory -Path $Out -Force | Out-Null
         }
         # Bind-mount the repo so -out .docker/checksum-sign lands on the host (gitignored).
-        # Uses stock golang:1.25 so this works before `docker compose build dev`.
+        # Uses stock golang:1.26 so this works before `docker compose build dev`.
         & docker run --rm `
             -v "${Root}:/src" `
             -w /src `
-            golang:1.25 `
+            golang:1.26 `
             go run ./scripts/gen-checksum-keypair -out .docker/checksum-sign
         if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
         Write-Host "Host files: $Out"

@@ -31,7 +31,7 @@ from the repo you run in (or --path). Compose always runs on the host.
 Run from a repo checkout, or pass --path. Siding walks up to .siding/config.yml.
 Machine state is a single path-keyed state.json under your user data directory.
 
-See https://github.com/TheBlackhowling/siding-releases`,
+See https://github.com/TheBlackhowling/siding/releases`,
 	}
 	root.PersistentFlags().StringVar(&globalRoot, "root", "", "Override state file or directory (also SIDING_ROOT)")
 	root.PersistentPreRun = func(cmd *cobra.Command, _ []string) {

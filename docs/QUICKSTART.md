@@ -27,7 +27,7 @@ siding doctor --path C:\source\my-app
 
 ## 2. First checkout: write the org recipe
 
-Dry-run first. Scan will try to **own every published compose port** (web, api, redis, postgres, firebase, …). That is required — skipping them is how parallel stacks collide.
+Dry-run first. Scan will try to **own every published compose port** (web, api, redis, postgres, firebase, …). That is required - skipping them is how parallel stacks collide.
 
 ```powershell
 siding init --path C:\source\my-app --dry-run
@@ -42,14 +42,14 @@ siding init --path C:\source\my-app --project myapp --folder-prefix myapp- --pre
 On a TTY the wizard asks (in this order):
 
 1. **Folder prefix** and **project id** when they are not obvious from the folder name (`acme-betty` → prefix `acme-`, project `acme`).
-2. Which compose files at the **repo root** to process (numbered list — `all` or `1,3`). Nested compose files are ignored. Each file becomes its own stack except `*override*` files, which stay with the primary compose file.
+2. Which compose files at the **repo root** to process (numbered list - `all` or `1,3`). Nested compose files are ignored. Each file becomes its own stack except `*override*` files, which stay with the primary compose file.
 3. A **suffix** per stack (`test`, `prod`, …) used in hosts and `siding up --mode`. Guess from the filename.
 4. Shared Caddy proxy (host `:80`) vs raw published ports (prefer the proxy).
-5. Whether to copy those compose files into `.siding/compose/` and adapt the copies (`${WEB_PORT:-…}`, public URL env, Compose DNS). **Originals stay at the repo root** so `docker compose` without siding still works. On a large YAML-anchor compose, answer **no** the first time — env overrides on the original often suffice.
-6. **Repo env files per mode** — after compose copies are decided, each mode is asked separately. Only files for **that** mode’s compose stack are listed. These are `docker compose --env-file` on `siding up --mode NAME`, not `.siding/env`. For each pick, **skip if missing?** defaults to **yes** (optional in the recipe). Flag: `--compose-env-file prod=docker/.env.prod-db` (non-interactive entries are required).
-7. **Primary git branch** — default start point for `siding worktree add` when `from` is omitted. Flag: `--primary-branch`.
-8. **Public host prefix** — product name only (`example`), not `app.example`. Subdomains `app`, `www`, and `api` all work: `app.example.{stack}.test.localhost`. `none` keeps `{stack}.{project}.{mode}`. Compose can guess `example` from `app.example.test`. Do not add `*.localhost` to the hosts file.
-9. **HTTP entry points** — subdomain for each web container (`web` → `app`, `api` → `api`). Those names are the clickable links on `http://siding.localhost`. Comma extras (`app,www`) add more links. Flag: `--entry web=app --entry api=api`.
+5. Whether to copy those compose files into `.siding/compose/` and adapt the copies (`${WEB_PORT:-…}`, public URL env, Compose DNS). **Originals stay at the repo root** so `docker compose` without siding still works. On a large YAML-anchor compose, answer **no** the first time - env overrides on the original often suffice.
+6. **Repo env files per mode** - after compose copies are decided, each mode is asked separately. Only files for **that** mode’s compose stack are listed. These are `docker compose --env-file` on `siding up --mode NAME`, not `.siding/env`. For each pick, **skip if missing?** defaults to **yes** (optional in the recipe). Flag: `--compose-env-file prod=docker/.env.prod-db` (non-interactive entries are required).
+7. **Primary git branch** - default start point for `siding worktree add` when `from` is omitted. Flag: `--primary-branch`.
+8. **Public host prefix** - product name only (`example`), not `app.example`. Subdomains `app`, `www`, and `api` all work: `app.example.{stack}.test.localhost`. `none` keeps `{stack}.{project}.{mode}`. Compose can guess `example` from `app.example.test`. Do not add `*.localhost` to the hosts file.
+9. **HTTP entry points** - subdomain for each web container (`web` → `app`, `api` → `api`). Those names are the clickable links on `http://siding.localhost`. Comma extras (`app,www`) add more links. Flag: `--entry web=app --entry api=api`.
 
 Flags skip the prompts: `--compose`, `--mode-name FILE=SUFFIX`, `--compose-env-file MODE=PATH`, `--prefer-proxy`, `--rewrite-compose`, `--http-prefix`, `--primary-branch`, `--entry KEY=LABEL`.
 
@@ -138,7 +138,7 @@ siding worktree sync          # adopt a plain git worktree add
 siding worktree remove genie  # from the main checkout
 ```
 
-Close the linked folder as a Cursor workspace before `worktree remove` on Windows — an open workspace can block deleting the directory.
+Close the linked folder as a Cursor workspace before `worktree remove` on Windows - an open workspace can block deleting the directory.
 
 ## If it fights you
 

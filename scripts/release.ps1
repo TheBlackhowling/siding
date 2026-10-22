@@ -1,9 +1,8 @@
-# Cut the next GitHub Release from this private repo.
+# Cut the next GitHub Release on this repo.
 #
 # Finds the highest vMAJOR.MINOR.PATCH tag, increments it, tags HEAD, and
 # pushes. No prior tag → v0.1.0 (any bump). Then creates a GitHub Release
-# on this repo (generate-notes; private PR links stay here). The Release
-# workflow publishes archives to TheBlackhowling/siding-releases.
+# on this repo (generate-notes). The Release workflow publishes archives here (GoReleaser).
 #
 #   .\scripts\release.ps1 patch
 #   .\scripts\release.ps1 minor
@@ -87,7 +86,7 @@ if ($DryRun) {
 }
 
 if (-not (Get-Command gh -ErrorAction SilentlyContinue)) {
-    throw "gh is required to create the private GitHub Release on this repo"
+    throw "gh is required to create the GitHub Release on this repo"
 }
 
 if (git rev-parse -q --verify "refs/tags/$tag") {
@@ -109,7 +108,7 @@ if ($current) {
 }
 & gh @ghArgs
 if ($LASTEXITCODE -ne 0) {
-    Write-Host "Tag $tag is on origin. Create the private Release manually:"
+    Write-Host "Tag $tag is on origin. Create the Release manually:"
     Write-Host "  gh release create $tag --repo TheBlackhowling/siding --generate-notes"
     throw "gh release create failed"
 }
@@ -118,7 +117,7 @@ $libraryAppend = @"
 
 ## Go library (lockstep with CLI)
 
-Same tag ``$tag`` — the public Go module is released with these CLI binaries. AEOS and other Go CLIs import in-process:
+Same tag ``$tag`` - the Go module is released with these CLI binaries. Import in-process:
 
 ``````go
 require github.com/TheBlackhowling/siding $tag
@@ -126,18 +125,18 @@ require github.com/TheBlackhowling/siding $tag
 import "github.com/TheBlackhowling/siding/siding"
 ``````
 
-Set ``GOPRIVATE=github.com/TheBlackhowling/*``. See ``docs/LIBRARY.md``.
+See ``docs/LIBRARY.md``.
 "@
 $body = gh release view $tag --repo TheBlackhowling/siding --json body -q .body
 $notesFile = Join-Path $env:TEMP "siding-release-notes-$tag.md"
 Set-Content -Path $notesFile -Value ($body + $libraryAppend) -NoNewline
 gh release edit $tag --repo TheBlackhowling/siding --notes-file $notesFile
 if ($LASTEXITCODE -ne 0) {
-    Write-Host "Warning: could not append library notes to private release $tag"
+    Write-Host "Warning: could not append library notes to release $tag"
 }
 
 Write-Host ""
 Write-Host "Pushed $tag. Watch: https://github.com/TheBlackhowling/siding/actions"
 Write-Host "Notes:    https://github.com/TheBlackhowling/siding/releases/tag/$tag"
-Write-Host "Binaries: https://github.com/TheBlackhowling/siding-releases/releases/tag/$tag"
+Write-Host "Binaries: https://github.com/TheBlackhowling/siding/releases/tag/$tag"
 Write-Host "Library:  go get github.com/TheBlackhowling/siding@$tag"

@@ -15,7 +15,7 @@ From the repo root:
 
 That writes `bin\siding.exe` (windows/amd64) and copies it to `%LOCALAPPDATA%\siding\bin\siding.exe`. Needs Docker Desktop. Give the shell full permissions so compose can run.
 
-After it finishes, report both paths. A local build prints `siding dev` / `commit: none` — that is expected (no release ldflags).
+After it finishes, report both paths. A local build prints `siding dev` / `commit: none` - that is expected (no release ldflags).
 
 `install.ps1` prepends the bin dir for **this** shell session. Cursor's integrated terminal still has the IDE's PATH until Cursor restarts; if `siding` is not found after install, print:
 

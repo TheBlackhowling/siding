@@ -19,7 +19,7 @@ These apply to every command (persistent flags / env).
 | `SIDING_NO_UPDATE_CHECK` | Skip the after-command check for a newer GitHub Release |
 
 After a successful command, a release binary may print one stderr line when
-[siding-releases](https://github.com/TheBlackhowling/siding-releases/releases/latest)
+[GitHub Releases](https://github.com/TheBlackhowling/siding/releases/latest)
 has a newer stable tag (`Run: siding update`). `dev` builds, `--json`, and
 `SIDING_NO_UPDATE_CHECK` skip that check. The result is cached as
 `update-check.json` under the user-data directory for one hour.
@@ -78,7 +78,7 @@ No extra flags.
 ## `siding update`
 
 Download the archive for **this** OS/arch from
-[siding-releases](https://github.com/TheBlackhowling/siding-releases/releases/latest),
+[GitHub Releases](https://github.com/TheBlackhowling/siding/releases/latest),
 verify `checksums.txt`, and replace the binary in the same directory as
 [`siding install`](#siding-install), not a copy you launched from Downloads.
 
@@ -112,7 +112,7 @@ Never edits the OS hosts file. Does not start containers unless you run `up` you
 | Flag | Default | What it does |
 |------|---------|----------------|
 | `--path` | cwd | Repo to initialize |
-| `--project` | folder prefix without the trailing hyphen, else folder name | Product id shared by every clone (`acme`, `hello`). Not the clone folder — that is the stack |
+| `--project` | folder prefix without the trailing hyphen, else folder name | Product id shared by every clone (`acme`, `hello`). Not the clone folder - that is the stack |
 | `--folder-prefix` | guessed from `org-clone` folders | Stripped from folder names (`acme-betty` → stack `betty`). `acme-genie2` → `acme-` even when non-interactive. `none` / empty flag value disables |
 | `--http-prefix` / `--host-prefix` | inferred or none | Product prefix without `app.` (`example` → `app/www/api.example.{stack}.{mode}.localhost`). `none` = `{stack}.{project}.{mode}` |
 | `--entry KEY=LABEL` | `web=app` when a prefix is set, else `web`; `api=api` | Repeatable HTTP entry points. Clickable on `http://siding.localhost`. Extras: `--entry web=app,www` |
@@ -407,7 +407,7 @@ Create `{parent}/{folder_prefix}NAME` next to the current checkout, run `git wor
 | `from` | Optional start point (`main`, tag, commit). Default: recipe `primary_branch` (`main` if unset) |
 | `--path` | Main checkout to anchor from (default: cwd) |
 
-If `sync` fails after git succeeds, the folder remains — run `siding sync --path …` to finish.
+If `sync` fails after git succeeds, the folder remains - run `siding sync --path …` to finish.
 
 ```powershell
 siding worktree add genie feat/my-work
@@ -442,7 +442,7 @@ siding worktree list
 
 ### `siding worktree sync`
 
-List git worktrees and run `siding sync` on any checkout **not yet in state.json** — for example after a plain `git worktree add`. Does not create worktrees or run `up`. Skips bare worktrees and paths without a committed recipe.
+List git worktrees and run `siding sync` on any checkout **not yet in state.json** - for example after a plain `git worktree add`. Does not create worktrees or run `up`. Skips bare worktrees and paths without a committed recipe.
 
 ```powershell
 siding worktree sync
@@ -531,7 +531,7 @@ Building siding itself (this repo), not an app stack. See also [README](../READM
 | `.\docker\dev.ps1 build` | Same as `build.ps1` |
 | `.\docker\dev.ps1 shell` | Interactive container |
 | `./docker/build.sh` | Linux `bin/siding`; `./docker/build.sh all` for every platform |
-| `git tag v0.1.0 && git push origin v0.1.0` | Builds here; public GitHub Release on [siding-releases](https://github.com/TheBlackhowling/siding-releases) ([Release](RELEASE.md)) |
+| `git tag v0.1.0 && git push origin v0.1.0` | Release workflow; assets on [GitHub Releases](https://github.com/TheBlackhowling/siding/releases) ([Release](RELEASE.md)) |
 
 `docker\dev.ps1 run …` runs siding **inside** the container. Checkout keys then use container paths. Fine for `plan`/`doctor` experiments; wrong for `up`/`proxy` on Windows.
 

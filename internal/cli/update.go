@@ -15,9 +15,9 @@ import (
 func updateCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "update [version]",
-		Short: "Download a siding-releases binary onto PATH",
+		Short: "Download a release binary onto PATH",
 		Long: `Download the archive for this OS/arch from GitHub Releases
-(TheBlackhowling/siding-releases), verify checksums.txt, and replace
+(TheBlackhowling/siding), verify checksums.txt, and replace
 the installed binary (not a random copy you launched from Downloads).
 
 With no argument, installs the latest stable release. Pass a tag

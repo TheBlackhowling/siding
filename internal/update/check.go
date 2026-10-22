@@ -1,4 +1,4 @@
-// Package update checks siding-releases for a newer stable GitHub Release.
+// Package update checks this repo's GitHub Releases for a newer stable tag.
 package update
 
 import (
@@ -16,8 +16,8 @@ const (
 	EnvDisable = "SIDING_NO_UPDATE_CHECK"
 
 	ReleasesOwner = "TheBlackhowling"
-	ReleasesRepo  = "siding-releases"
-	ReleasesPage  = "https://github.com/TheBlackhowling/siding-releases/releases/latest"
+	ReleasesRepo  = "siding"
+	ReleasesPage  = "https://github.com/TheBlackhowling/siding/releases/latest"
 
 	CacheFileName = "update-check.json"
 	DefaultTTL    = 1 * time.Hour
