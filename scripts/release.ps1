@@ -2,8 +2,7 @@
 #
 # Finds the highest vMAJOR.MINOR.PATCH tag, increments it, tags HEAD, and
 # pushes. No prior tag → v0.1.0 (any bump). Then creates a GitHub Release
-# on this repo (generate-notes; private PR links stay here). The Release
-# workflow publishes archives to the same repo (GoReleaser).
+# on this repo (generate-notes). The Release workflow publishes archives here (GoReleaser).
 #
 #   .\scripts\release.ps1 patch
 #   .\scripts\release.ps1 minor
@@ -118,7 +117,7 @@ $libraryAppend = @"
 
 ## Go library (lockstep with CLI)
 
-Same tag ``$tag`` - the public Go module is released with these CLI binaries. AEOS and other Go CLIs import in-process:
+Same tag ``$tag`` - the Go module is released with these CLI binaries. Import in-process:
 
 ``````go
 require github.com/TheBlackhowling/siding $tag
@@ -126,7 +125,7 @@ require github.com/TheBlackhowling/siding $tag
 import "github.com/TheBlackhowling/siding/siding"
 ``````
 
-Set ``GOPRIVATE=github.com/TheBlackhowling/*``. See ``docs/LIBRARY.md``.
+See ``docs/LIBRARY.md``.
 "@
 $body = gh release view $tag --repo TheBlackhowling/siding --json body -q .body
 $notesFile = Join-Path $env:TEMP "siding-release-notes-$tag.md"

@@ -1,6 +1,6 @@
-# Siding library API (private)
+# Siding library API
 
-AEOS and other Go CLIs should import **`github.com/TheBlackhowling/siding/siding`**, not
+Other Go CLIs should import **`github.com/TheBlackhowling/siding/siding`**, not
 `internal/*`. The human `siding` binary in `cmd/siding` is a thin cobra wrapper around
 this package.
 
@@ -12,7 +12,7 @@ require github.com/TheBlackhowling/siding vX.Y.Z
 import "github.com/TheBlackhowling/siding/siding"
 ```
 
-Pin a release tag. Set `GOPRIVATE=github.com/TheBlackhowling/*` for private fetches.
+Pin a release tag from [GitHub Releases](https://github.com/TheBlackhowling/siding/releases).
 
 ## Versioning (lockstep with CLI)
 
@@ -21,7 +21,7 @@ Cut releases with [`scripts/release.ps1`](../scripts/release.ps1) the same way a
 CLI-only releases - there is no separate library version.
 
 ```go
-// AEOS go.mod - same tag as the CLI zip on GitHub Releases (this repo)
+// go.mod - same tag as the CLI zip on GitHub Releases (this repo)
 require github.com/TheBlackhowling/siding v0.2.0
 ```
 

@@ -139,7 +139,7 @@ func changelogExcluded(excludes []string, subject string) (bool, error) {
 func TestGoreleaserChangelogConfigured(t *testing.T) {
 	cfg := loadGoreleaserChangelog(t)
 	if cfg.Changelog.Use != "git" {
-		t.Fatalf("changelog.use must be git so notes stay non-empty without the private GitHub API, got %q", cfg.Changelog.Use)
+		t.Fatalf("changelog.use must be git so notes stay non-empty without the GitHub compare API, got %q", cfg.Changelog.Use)
 	}
 	if cfg.Changelog.Abbrev < 1 {
 		t.Fatalf("changelog.abbrev must shorten SHAs, got %d", cfg.Changelog.Abbrev)

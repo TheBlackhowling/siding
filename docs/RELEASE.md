@@ -44,8 +44,7 @@ GoReleaser attaches the six archives to that release.
 
 On **`TheBlackhowling/siding`** (or your release repo) Actions secrets:
 
-**Not required:** `GORELEASER_GITHUB_TOKEN` - releases publish to this repo via
-`GITHUB_TOKEN`.
+**Not required:** a separate publish PAT (`GORELEASER_GITHUB_TOKEN`). This repo uses the workflow `GITHUB_TOKEN`.
 
 **macOS sign + notarize** (all five, or none: empty skips signing):
 
