@@ -1,0 +1,5 @@
+services:
+  web:
+    image: traefik/whoami
+    ports:
+      - "${WEB_PORT:-18080}:80"

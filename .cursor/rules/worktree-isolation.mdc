@@ -1,0 +1,14 @@
+---
+description: Stay inside the current workspace; do not edit sibling worktrees or checkouts
+alwaysApply: true
+---
+
+# Workspace isolation
+
+This repo is often opened as one of several git worktrees or sibling folders. The current workspace root is the only tree this agent may change.
+
+- Read, edit, test, and commit **only** under the workspace root Cursor opened (the current working tree).
+- Sibling directories — other worktrees of this repo, `siding-releases`, or any nearby checkout — stay where they are. Do not write, format, checkout, rebase, or commit in them.
+- Run git from this worktree’s root. Do not pass `-C`, `--git-dir`, or `--work-tree` aimed at another checkout.
+- Do not check out a branch that another worktree already has checked out, and do not move or remove other worktrees.
+- Listing another folder to *read* context is fine; changing it is not. If work belongs in a different tree, stop and ask.

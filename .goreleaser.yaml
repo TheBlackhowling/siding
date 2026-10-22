@@ -1,0 +1,106 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+version: 2
+
+project_name: siding
+
+before:
+  hooks:
+    - go mod tidy
+    - go test ./...
+    - bash scripts/verify-library.sh
+
+builds:
+  - id: siding
+    main: ./cmd/siding
+    binary: siding
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w
+      - -X github.com/TheBlackhowling/siding/internal/version.Version={{.Version}}
+      - -X github.com/TheBlackhowling/siding/internal/version.Commit={{.Commit}}
+      - -X github.com/TheBlackhowling/siding/internal/version.Date={{.Date}}
+
+archives:
+  - formats: [tar.gz]
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    format_overrides:
+      - goos: windows
+        formats: [zip]
+
+checksum:
+  name_template: checksums.txt
+
+signs:
+  - cmd: go
+    args:
+      - run
+      - ./scripts/sign-checksums
+      - "${artifact}"
+    artifacts: checksum
+    signature: "${artifact}.sig"
+    env:
+      - SIDING_CHECKSUM_SIGN_SEED={{ .Env.SIDING_CHECKSUM_SIGN_SEED }}
+
+snapshot:
+  version_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  use: git
+  sort: asc
+  abbrev: 8
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^Merge pull request"
+      - "^Merge branch"
+      - "^Merge remote-tracking branch"
+
+notarize:
+  macos:
+    - enabled: '{{ isEnvSet "MACOS_SIGN_P12" }}'
+      ids:
+        - siding
+      sign:
+        certificate: "{{.Env.MACOS_SIGN_P12}}"
+        password: "{{.Env.MACOS_SIGN_PASSWORD}}"
+      notarize:
+        issuer_id: "{{.Env.MACOS_NOTARY_ISSUER_ID}}"
+        key_id: "{{.Env.MACOS_NOTARY_KEY_ID}}"
+        key: "{{.Env.MACOS_NOTARY_KEY}}"
+        # Apple JWT lifetime is 20m. wait:true plus a longer timeout is rejected
+        # before sign starts. Submit and continue; Gatekeeper can query Apple later.
+        wait: false
+        timeout: 20m
+
+release:
+  github:
+    owner: TheBlackhowling
+    name: siding
+  draft: false
+  prerelease: auto
+  header: |
+    CLI binaries for this tag. Download the archive for your OS.
+
+    The Go library (`github.com/TheBlackhowling/siding/siding`) ships at the
+    **same tag** as these binaries — one `v*` tag, lockstep.
+  footer: |
+    ## Go library (same tag)
+
+    AEOS and other Go CLIs with repo access import the module at this version:
+
+    ```go
+    require github.com/TheBlackhowling/siding v{{ .Version }}
+
+    import "github.com/TheBlackhowling/siding/siding"
+    ```
+
+    Set `GOPRIVATE=github.com/TheBlackhowling/*`. See `docs/LIBRARY.md` in the source repo.

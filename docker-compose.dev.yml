@@ -1,0 +1,43 @@
+# Local dev without Go installed:
+#   .\docker\build.ps1              -> bin/siding.exe on host
+#   docker compose -f docker-compose.dev.yml run --rm dev
+#   .\docker\dev.ps1 test
+
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+      target: dev
+    working_dir: /src
+    volumes:
+      # Repo checkout (live edits on the host)
+      - .:/src
+      # Module cache — faster repeat runs
+      - siding-go-mod:/go/pkg/mod
+      # Machine state persisted on the host (see .docker/siding-data/)
+      - ./.docker/siding-data:/data
+    environment:
+      SIDING_DATA: /data
+    stdin_open: true
+    tty: true
+
+  # Docker CLI + socket for `siding doctor` compose checks.
+  doctor:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+      target: doctor
+    working_dir: /src
+    volumes:
+      - .:/src
+      - siding-go-mod:/go/pkg/mod
+      - ./.docker/siding-data:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      SIDING_DATA: /data
+    stdin_open: true
+    tty: true
+
+volumes:
+  siding-go-mod:

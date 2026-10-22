@@ -1,0 +1,12 @@
+# Committed siding recipe. Slot names come from the checkout folder.
+version: 1
+project: siding
+folder_prefix: siding-
+host: "{stack}.{project}.{mode}"
+compose_project: "{project}-{stack}-{mode}"
+slot_env_file: .siding/env
+
+modes:
+  test:
+    compose_files:
+      - docker-compose.dev.yml
