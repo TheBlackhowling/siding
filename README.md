@@ -1,45 +1,40 @@
 # Siding
 
-**Park a stack on a siding.** Named local Docker stacks — isolated ports, compose project names, and `*.localhost` hosts — without copying allocator scripts into every app.
+**Park a stack on a siding.** Each git checkout gets its own Docker Compose stack - its own ports, compose project name, and browser-friendly `*.localhost` host - without copying allocator scripts into every repo.
 
-Not vinyl. A railroad siding: the main line stays clear; each checkout waits on its own spur.
+If you run **more than one clone** of the same app, or several apps at once, you have already hit the wall: everything defaults to `3000`, `8000`, and `5432`. Per-repo PowerShell helpers drift. Editing the hosts file does not scale. Siding is a small CLI that keeps a **recipe in git** and **ports on your machine** separate, so a second folder can `up` without fighting the first.
 
-- [Quick start](docs/QUICKSTART.md) — first recipe, what to commit, first `up`
-- [Commands](docs/COMMANDS.md) — every command, flag, and what it does
-- [Repo recipe](docs/CONTRACT.md) — committed `.siding/config.yml`
-- [Machine state](docs/STATE.md) — `state.json` and the shared proxy
-- [Release](docs/RELEASE.md) — tag here; binaries on [GitHub Releases](https://github.com/TheBlackhowling/siding/releases)
-- [Library API](docs/LIBRARY.md) — Go import for AEOS (`siding/` package, lockstep with CLI tags)
+Start here: [Quick start](docs/QUICKSTART.md). When you need every flag: [Commands](docs/COMMANDS.md). The committed contract is [`.siding/config.yml`](docs/CONTRACT.md); machine state lives in [STATE.md](docs/STATE.md).
 
-## What it is designed to do
+## How it thinks about your repos
 
-Siding is for people who keep **several checkouts of the same product** (or several products) running at once. Docker Compose defaults (`3000`, `8000`, `5432`, `8080`) collide the moment two folders try to bind the same host ports. Per-repo PowerShell allocators drift. Hosts-file hacks do not scale.
+You commit a **recipe** at `.siding/config.yml`: modes (`test`, `prod`, …), which compose files to use, which port keys exist, how hosts should look. That file describes *kinds* of stack, not a list of developer names.
 
-Siding splits that problem in two:
+The **checkout folder** is the slot. `acme-betty` with `folder_prefix: acme-` is stack `betty`. Open another clone as `acme-changelog` and you get another stack without touching the recipe.
 
-| Layer | Where | What |
-|-------|--------|------|
-| **Org recipe** | committed `.siding/config.yml` | Kinds of stack: modes, compose files, **every published port key**, public URL templates |
-| **This machine** | `%LOCALAPPDATA%\siding\state.json` | This checkout’s allocated ports, host, compose project |
+On disk, siding writes `.siding/env` (generated, gitignored) and records allocations in `%LOCALAPPDATA%\siding\state.json` on Windows (see [STATE.md](docs/STATE.md) for other OS paths). Same recipe in git; different numbers per machine and per folder.
 
-The recipe does not name slots. The **folder** is the slot: `acme-betty` becomes stack `betty` (optional `folder_prefix`). A new clone needs no recipe edit.
+Compose always runs **on the host**, not inside a dev container, so bind mounts are real paths on your machine. Commands like `up`, `down`, `proxy`, and `ps` should use an installed `siding` binary for that reason.
 
-Compose always runs **on the host**. The shared proxy (Caddy on host **`:80`**) is optional and machine-wide: browsers use `http://app.betty.acme.test.localhost` while Redis and Postgres stay unique Docker host binds so two checkouts still cannot sit on `5432`.
+Optional **shared proxy**: one Caddy on loopback `:80` routes `http://app.betty.acme.test.localhost` (and friends) to whatever port siding picked for that checkout. Redis and Postgres stay ordinary host ports - siding still allocates them so two stacks never grab the same `5432`.
 
-## Intentions
+## What it is good at (and what it is not)
 
-- **Own every published port.** Web, API, Redis, Postgres, Firebase, Tika — if compose publishes it, siding allocates it. Caddy only HTTP-proxies `web` and `api`; the rest still move so they cannot collide.
-- **One recipe per product, many checkouts.** Commit `.siding/config.yml`. Do not commit `.siding/env` or machine `state.json`.
-- **Identity from the path.** `--path` or cwd → walk up to `.siding/` → folder basename (minus prefix) → stack. No roster of named stacks in the recipe, no overlay beside the exe.
-- **In-stack DNS vs browser URLs are different on purpose.** Containers talk `http://backend:8000` on the Compose network. Browsers talk `*.localhost` via Caddy on `:80`.
-- **Never edit the OS hosts file.** Browsers resolve `*.localhost` without it. `--print-hosts` only prints lines for curl/Node/Windows if you want them.
-- **Host binary for compose.** `up` / `down` / `reset` / `tail` / `remove` / `ps` / `proxy` must run as a native exe so bind mounts are your Windows (or macOS/Linux) paths, not a container’s `/src`.
+It tries to **own every port your compose file publishes**, not just the web tier, so collisions show up at `init`/`up` instead of as mysterious Docker errors. HTTP goes through Caddy when the proxy is up; everything else is “pick a free port and put it in env.”
 
-Siding is not a cloud orchestrator, not a replacement for Docker Compose, and not a TCP/hostname router for Postgres. It is a local slot allocator plus an optional HTTP front door.
+It is **not** a cloud orchestrator, not a replacement for Compose, and not a general TCP router for databases. It is local slot bookkeeping plus an optional HTTP front door for browsers.
 
-## Develop
+Embedding in another Go CLI: [Library API](docs/LIBRARY.md) (`github.com/TheBlackhowling/siding/siding`, same tags as the binary).
 
-Requires [Docker Desktop](https://www.docker.com/products/docker-desktop/) only (no local Go). The repo is bind-mounted into a Go container; a Windows exe lands at `bin\siding.exe`.
+## Get the binary
+
+Releases: [GitHub Releases](https://github.com/TheBlackhowling/siding/releases) on this repo. See [RELEASE.md](docs/RELEASE.md) for tagging and CI.
+
+Windows: unzip, then `siding install` (or use [install.ps1](scripts/install.ps1) from a dev build). PowerShell will not run `.\siding.exe` from the current directory by name - install puts it on PATH.
+
+## Hack on siding itself
+
+You only need Docker Desktop (no local Go). Build in a container, install the exe, run tests:
 
 ```powershell
 .\docker\build.ps1
@@ -48,12 +43,8 @@ siding version
 .\docker\dev.ps1 test
 ```
 
-`.\bin\siding.exe` always works. PowerShell will not find `siding` until that install (or another PATH entry). Do not use `docker\dev.ps1 run up` — compose would resolve mounts inside the container.
-
-All-platform local artifacts: `.\docker\build.ps1 -All` → `dist\`. Public zips: `.\scripts\release.ps1 patch` ([Release](docs/RELEASE.md)).
-
-Details: [Commands → develop](docs/COMMANDS.md#develop-the-siding-cli). Native Go 1.22+ also works: `go test ./...` and `go run ./cmd/siding`.
+Do not run `docker\dev.ps1 run up` for app stacks - compose would see paths inside the container. All platforms: `.\docker\build.ps1 -All` → `dist\`. More detail: [Commands → develop](docs/COMMANDS.md#develop-the-siding-cli). With Go 1.26+ on PATH: `go test ./...` / `go run ./cmd/siding`.
 
 ## License
 
-MIT — see LICENSE.
+MIT - see [LICENSE](LICENSE).

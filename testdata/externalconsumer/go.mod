@@ -1,6 +1,6 @@
 module github.com/TheBlackhowling/siding/testdata/externalconsumer
 
-go 1.25
+go 1.26
 
 require github.com/TheBlackhowling/siding v0.0.0
 

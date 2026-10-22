@@ -91,7 +91,7 @@ release:
     CLI binaries for this tag. Download the archive for your OS.
 
     The Go library (`github.com/TheBlackhowling/siding/siding`) ships at the
-    **same tag** as these binaries — one `v*` tag, lockstep.
+    **same tag** as these binaries - one `v*` tag, lockstep.
   footer: |
     ## Go library (same tag)
 

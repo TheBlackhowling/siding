@@ -84,7 +84,7 @@ When you run `siding plan`, `siding sync`, `siding up`, or `siding remove`:
 | Bind | Role |
 |------|------|
 | `127.0.0.1:80` | HTTP Host routes (override with `siding proxy up --listen`) |
-| `127.0.0.1:2019` | Caddy admin API (`siding proxy reload` POSTs a new Caddyfile here). **Unauthenticated** — any local process can reconfigure Caddy; loopback-only is for convenience, not isolation from other local software. |
+| `127.0.0.1:2019` | Caddy admin API (`siding proxy reload` POSTs a new Caddyfile here). **Unauthenticated** - any local process can reconfigure Caddy; loopback-only is for convenience, not isolation from other local software. |
 
 Those two ports are reserved and never allocated to a stack. A leftover `proxy.listen` of `0` or `1355` is migrated to `80` on read. Explicit `--listen 8080` is kept.
 

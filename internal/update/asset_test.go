@@ -46,7 +46,7 @@ func TestParseAndVerifyChecksum(t *testing.T) {
 }
 
 func TestGitHubOnlyRedirect(t *testing.T) {
-	ok, _ := http.NewRequest(http.MethodGet, "https://github.com/TheBlackhowling/siding-releases/x", nil)
+	ok, _ := http.NewRequest(http.MethodGet, "https://github.com/TheBlackhowling/siding/x", nil)
 	if err := githubOnlyRedirect(ok, nil); err != nil {
 		t.Fatal(err)
 	}

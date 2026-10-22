@@ -5,7 +5,7 @@
 #   dev    — go test / go run (default)
 #   doctor — same + Docker CLI for `siding doctor` (socket mounted at runtime)
 
-FROM golang:1.25-bookworm AS base
+FROM golang:1.26-bookworm AS base
 
 WORKDIR /src
 

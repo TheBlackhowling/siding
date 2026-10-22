@@ -18,10 +18,10 @@ Pin a release tag. Set `GOPRIVATE=github.com/TheBlackhowling/*` for private fetc
 
 Every `v*` tag is **one release** for both the `siding` binary and this module.
 Cut releases with [`scripts/release.ps1`](../scripts/release.ps1) the same way as
-CLI-only releases — there is no separate library version.
+CLI-only releases - there is no separate library version.
 
 ```go
-// AEOS go.mod — same tag as the CLI zip on siding-releases
+// AEOS go.mod - same tag as the CLI zip on GitHub Releases (this repo)
 require github.com/TheBlackhowling/siding v0.2.0
 ```
 

@@ -2,27 +2,23 @@
 
 [Siding](../README.md) · [Commands](COMMANDS.md)
 
-Source stays in this **private** repo. Binaries are published to the public
-[siding-releases](https://github.com/TheBlackhowling/siding-releases) repo so
-anyone can download them without access here.
+One **`v*` tag** on this repo releases **CLI binaries, checksums, and the Go
+module together** - same commit, same version.
 
-You do not need local Go.
+You do not need local Go to cut a release (CI runs GoReleaser).
 
 ## What gets published
 
-One `v*` tag releases **CLI binaries and the Go library together** — same
-commit, same version. There is no separate library tag or release train.
-
 | Deliverable | Where | How consumers get it |
 |-------------|-------|----------------------|
-| CLI binaries | [siding-releases](https://github.com/TheBlackhowling/siding-releases) | Download zip/tar.gz |
-| Go library | This repo (private) | `go get github.com/TheBlackhowling/siding@vX.Y.Z` · import `siding/siding` |
+| CLI binaries | [GitHub Releases](https://github.com/TheBlackhowling/siding/releases) on **this repo** | Download zip/tar.gz |
+| Go library | Same repo, same tag | `go get github.com/TheBlackhowling/siding@vX.Y.Z` · import `siding/siding` |
 
 Release CI runs [`scripts/verify-library.sh`](../scripts/verify-library.sh)
-before GoReleaser uploads binaries. If the library does not compile for external
-modules, the release fails and nothing is published.
+before GoReleaser uploads assets. If the library does not compile for external
+modules, the release fails.
 
-GitHub Release assets on **siding-releases** for each of:
+Assets per tag:
 
 | OS | Arch | Archive |
 |----|------|---------|
@@ -30,27 +26,26 @@ GitHub Release assets on **siding-releases** for each of:
 | macOS | amd64, arm64 | `.tar.gz` |
 | Linux | amd64, arm64 | `.tar.gz` |
 
-Checksums in `checksums.txt`. Version/commit/date are stamped into `siding version`.
+Checksums in `checksums.txt` (Ed25519 signature in `checksums.txt.sig`).
+Version/commit/date are stamped into `siding version`.
 
-CI: [`.github/workflows/release.yml`](../.github/workflows/release.yml) on tags `v*` in **this** repo. Config: [`.goreleaser.yaml`](../.goreleaser.yaml) (`release.github.name: siding-releases`).
+CI: [`.github/workflows/release.yml`](../.github/workflows/release.yml) on tags
+`v*`. Config: [`.goreleaser.yaml`](../.goreleaser.yaml) (`release.github.name:
+siding`). GoReleaser uses the workflow **`GITHUB_TOKEN`** (no separate publish
+PAT).
 
 ## Release notes
 
-Each tag creates two GitHub Releases. Same commit range (previous stable
-`v*` tag → this tag). Old tags are left as they were.
-
-| Where | Who sees it | Body |
-|-------|-------------|------|
-| **This repo** | people with access here | `gh release create --generate-notes` from [`scripts/release.ps1`](../scripts/release.ps1), then library import notes appended. Private PR links are fine. |
-| **[siding-releases](https://github.com/TheBlackhowling/siding-releases)** | anyone | GoReleaser `git` changelog: 8-character SHAs, merge commits dropped. Header/footer note that the Go library ships at the same tag. No private PR URLs — the publish token cannot read this repo’s GitHub API. |
+[`scripts/release.ps1`](../scripts/release.ps1) creates the GitHub Release with
+`gh release create --generate-notes`, then appends Go library import notes.
+GoReleaser attaches the six archives to that release.
 
 ## One-time: secrets
 
-On `TheBlackhowling/siding` Actions secrets:
+On **`TheBlackhowling/siding`** (or your release repo) Actions secrets:
 
-**Publish** (`GORELEASER_GITHUB_TOKEN`): fine-grained PAT, resource
-`TheBlackhowling/siding-releases` only, **Contents: Read and write**.
-The default `GITHUB_TOKEN` cannot create a Release on another repo.
+**Not required:** `GORELEASER_GITHUB_TOKEN` - releases publish to this repo via
+`GITHUB_TOKEN`.
 
 **macOS sign + notarize** (all five, or none: empty skips signing):
 
@@ -78,14 +73,14 @@ of a 32-byte Ed25519 seed. Generate a keypair (no local Go required):
 .\docker\dev.ps1 gen-checksum-key
 ```
 
-That bind-mounts the repo into a `golang:1.25` container and runs
+That bind-mounts the repo into a `golang:1.26` container and runs
 `go run ./scripts/gen-checksum-keypair -out .docker/checksum-sign`, so files
 land under **`.docker/checksum-sign/`** on the host (gitignored):
 
 Equivalent without `dev.ps1`:
 
 ```powershell
-docker run --rm -v "${PWD}:/src" -w /src golang:1.25 `
+docker run --rm -v "${PWD}:/src" -w /src golang:1.26 `
   go run ./scripts/gen-checksum-keypair -out .docker/checksum-sign
 ```
 
@@ -119,13 +114,13 @@ git checkout main
 
 The first tag is always `v0.1.0`. After that, the script uses the highest `vMAJOR.MINOR.PATCH` tag (prerelease tags like `v0.1.0-rc.1` are ignored). `-Force` tags the current branch instead of requiring `main`.
 
-3. The script creates a GitHub Release on **this** repo (`--generate-notes`) and
+3. The script creates a GitHub Release on **this repo** (`--generate-notes`) and
    appends Go library import instructions (same tag as the CLI).
 4. The Release workflow verifies the library (`verify-library` job), then runs
    GoReleaser and attaches the six archives to
-   https://github.com/TheBlackhowling/siding-releases/releases
+   https://github.com/TheBlackhowling/siding/releases
 5. People download the zip for their OS, or on Windows run the exe through [install](COMMANDS.md#siding-install).
-6. Go consumers (AEOS) pin `github.com/TheBlackhowling/siding` at the same tag —
+6. Go consumers pin `github.com/TheBlackhowling/siding` at the same tag  - 
    see [LIBRARY.md](LIBRARY.md).
 
 Prerelease tags (`v0.1.0-rc.1`) are marked prerelease automatically (`prerelease: auto`).

@@ -52,7 +52,7 @@ function Read-SourceDoc {
 
 # --- COMMANDS.md ---
 $commands = Read-SourceDoc "COMMANDS.md"
-$commands = $commands -replace '\[Release\]\(RELEASE\.md\)', '[Releases](https://github.com/TheBlackhowling/siding-releases/releases)'
+$commands = $commands -replace '\[Release\]\(RELEASE\.md\)', '[Releases](https://github.com/TheBlackhowling/siding/releases)'
 $commands = $commands -replace '(?s)\r?\n---\r?\n\r?\n## Develop the siding CLI.*\z', ''
 
 $publicInstallUpdate = @'
@@ -67,7 +67,7 @@ PowerShell does not search the current folder, so `siding` only works after the 
 | Windows | `%LOCALAPPDATA%\siding\bin\siding.exe` |
 | macOS / Linux | `~/.local/bin/siding` |
 
-Download the archive from [Releases](https://github.com/TheBlackhowling/siding-releases/releases/latest) first. Windows amd64/arm64 are zips; macOS and Linux are `.tar.gz` (macOS is Developer ID signed).
+Download the archive from [Releases](https://github.com/TheBlackhowling/siding/releases/latest) first. Windows amd64/arm64 are zips; macOS and Linux are `.tar.gz` (macOS is Developer ID signed).
 
 The install process cannot change **this** PowerShell session’s PATH (a child process cannot). After `siding install`, prepend the bin dir in this session (or open a new Windows Terminal):
 
@@ -92,7 +92,7 @@ No extra flags.
 ## `siding update`
 
 Download the archive for **this** OS/arch from
-[siding-releases](https://github.com/TheBlackhowling/siding-releases/releases/latest),
+[GitHub Releases](https://github.com/TheBlackhowling/siding/releases/latest),
 verify `checksums.txt`, and replace the binary in the same directory as
 [`siding install`](#siding-install), not a copy you launched from Downloads.
 
@@ -151,7 +151,7 @@ Get one checkout running and check in the org recipe so everyone else can
 `sync`. Docker Desktop must be running.
 
 Download a binary from
-[Releases](https://github.com/TheBlackhowling/siding-releases/releases/latest)
+[Releases](https://github.com/TheBlackhowling/siding/releases/latest)
 (Windows `.zip`, macOS/Linux `.tar.gz`). macOS builds are Developer ID signed.
 
 **Windows:** PowerShell will not run `siding` from the current folder (no
@@ -217,7 +217,7 @@ siding worktree remove genie  # from the main checkout
 ```
 
 Close the linked folder as a Cursor workspace before `worktree remove` on
-Windows — an open workspace can block deleting the directory.
+Windows - an open workspace can block deleting the directory.
 
 '@
 
