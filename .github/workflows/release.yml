@@ -44,6 +44,12 @@ jobs:
           args: release --clean --timeout 3h
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SIDING_CHECKSUM_SIGN_SEED: ${{ secrets.SIDING_CHECKSUM_SIGN_SEED }}
+          MACOS_SIGN_P12: ${{ secrets.MACOS_SIGN_P12 }}
+          MACOS_SIGN_PASSWORD: ${{ secrets.MACOS_SIGN_PASSWORD }}
+          MACOS_NOTARY_KEY: ${{ secrets.MACOS_NOTARY_KEY }}
+          MACOS_NOTARY_KEY_ID: ${{ secrets.MACOS_NOTARY_KEY_ID }}
+          MACOS_NOTARY_ISSUER_ID: ${{ secrets.MACOS_NOTARY_ISSUER_ID }}
       - name: Verify macOS binaries are signed
         if: ${{ env.MACOS_SIGN_P12 != '' }}
         env:
