@@ -91,6 +91,10 @@ release:
     owner: TheBlackhowling
     name: siding
   draft: true
+  # release.ps1 creates the draft first; upload assets here instead of a second release.
+  use_existing_draft: true
+  replace_existing_draft: false
+  name_template: "{{ .Tag }}"
   prerelease: auto
   header: |
     CLI binaries for this tag. Download the archive for your OS.

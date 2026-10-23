@@ -35,14 +35,13 @@ repo.
 
 ## Release notes
 
-[`scripts/release.ps1`](../scripts/release.ps1) creates a **draft** GitHub
-Release with `gh release create --generate-notes --draft`, then appends Go
-library import notes. The Release workflow runs GoReleaser (build, sign,
-notarize, upload assets to the same draft). After macOS sign verification
-passes, CI runs `gh release edit --draft=false` so **Latest** only updates
-when binaries and checksums are ready. A failed workflow leaves a draft (or
-partial draft) — fix and re-run, or delete the tag and draft release before
-retrying.
+[`scripts/release.ps1`](../scripts/release.ps1) creates one **draft** GitHub
+Release per tag (`--title vX.Y.Z`, `--generate-notes --draft`) and appends Go
+library import notes. GoReleaser uses `use_existing_draft: true` so binaries
+upload to that draft (never a second release on the same tag). After macOS sign
+verification, CI runs `gh release edit --draft=false`. **Latest** updates only
+when assets are attached. A failed workflow leaves a draft — re-run the Release
+workflow on the tag, or delete the tag and both releases before retrying.
 
 ## One-time: secrets
 
