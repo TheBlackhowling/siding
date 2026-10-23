@@ -85,7 +85,7 @@ release:
   github:
     owner: TheBlackhowling
     name: siding
-  draft: false
+  draft: true
   prerelease: auto
   header: |
     CLI binaries for this tag. Download the archive for your OS.
