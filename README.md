@@ -28,15 +28,40 @@ Embedding in another Go CLI: [Library API](docs/LIBRARY.md) (`github.com/TheBlac
 
 ## Get the binary
 
-Releases: [GitHub Releases](https://github.com/TheBlackhowling/siding/releases) on this repo. See [RELEASE.md](docs/RELEASE.md) for tagging and CI.
+Download from [GitHub Releases](https://github.com/TheBlackhowling/siding/releases/latest) on this repo ([RELEASE.md](docs/RELEASE.md) for maintainers).
 
-macOS: use the `darwin_arm64` archive on Apple Silicon, `darwin_amd64` on Intel. Extract, then `./install.sh` (or `chmod +x siding && ./siding install`). That copies to `~/.local/bin` and updates shell PATH like Windows. Release CI waits for notarization; if Gatekeeper blocks an older download, use **Right-click → Open** once on `siding`.
+| OS | Archive | Install |
+|----|---------|---------|
+| macOS Apple Silicon | `siding_*_darwin_arm64.tar.gz` | `./install.sh` |
+| macOS Intel | `siding_*_darwin_amd64.tar.gz` | `./install.sh` |
+| Linux | `siding_*_linux_*.tar.gz` | `./install.sh` |
+| Windows | `siding_*_windows_*.zip` | `siding install` or [install.ps1](scripts/install.ps1) |
 
-Windows: unzip, then `siding install` (or use [install.ps1](scripts/install.ps1) from a dev build). PowerShell will not run `.\siding.exe` from the current directory by name - install puts it on PATH.
+**macOS / Linux** (after extracting the archive):
+
+```bash
+./install.sh
+siding version
+```
+
+`install.sh` runs `siding install` (copy to `~/.local/bin`, update shell PATH in `~/.zprofile` / `~/.zshrc` on macOS) and puts `siding` on PATH in the **current** terminal. New tabs pick up PATH automatically.
+
+If Gatekeeper blocks an older macOS download, **Right-click → Open** once on `siding`, then run `./install.sh` again.
+
+**Windows** — PowerShell does not run `siding` from the current folder without `.\`:
+
+```powershell
+Expand-Archive siding_*_windows_amd64.zip -DestinationPath siding-install
+cd siding-install
+.\siding.exe install
+siding version
+```
+
+From a dev build of this repo, use [install.ps1](scripts/install.ps1) instead (install + PATH for this session).
 
 ## Hack on siding itself
 
-You only need Docker Desktop (no local Go). Build in a container, install the exe, run tests:
+You only need Docker Desktop (no local Go). Build in a container, install the binary, run tests:
 
 ```powershell
 .\docker\build.ps1
@@ -44,6 +69,8 @@ You only need Docker Desktop (no local Go). Build in a container, install the ex
 siding version
 .\docker\dev.ps1 test
 ```
+
+On macOS/Linux: `./docker/build.sh` then `./scripts/install.sh` ([Commands → develop](docs/COMMANDS.md#develop-the-siding-cli)).
 
 Do not run `docker\dev.ps1 run up` for app stacks - compose would see paths inside the container. All platforms: `.\docker\build.ps1 -All` → `dist\`. More detail: [Commands → develop](docs/COMMANDS.md#develop-the-siding-cli). With Go 1.26+ on PATH: `go test ./...` / `go run ./cmd/siding`.
 

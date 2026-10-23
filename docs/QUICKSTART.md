@@ -4,7 +4,42 @@
 
 Get one checkout running and check in the org recipe so everyone else can `sync`. Docker Desktop must be running.
 
-**PowerShell:** it will not run `siding` from the current folder (no implicit `.\`). Either `.\bin\siding.exe …` or install once so `siding` works like any other command:
+## Install the siding CLI
+
+You need `siding` on your PATH before the steps below. Pick your OS.
+
+### macOS or Linux (GitHub release)
+
+Download the matching archive from [Releases](https://github.com/TheBlackhowling/siding/releases/latest) (`darwin_arm64` on Apple Silicon, `darwin_amd64` on Intel Mac, `linux_amd64` / `linux_arm64` on Linux). Each tarball includes `install.sh` at the top level.
+
+```bash
+tar -xzf siding_*_darwin_arm64.tar.gz   # example
+./install.sh
+siding version
+```
+
+On macOS, if Gatekeeper blocks the binary, **Right-click → Open** on `siding` once, then `./install.sh` again.
+
+### macOS or Linux (dev build of this repo)
+
+```bash
+./docker/build.sh          # bin/siding for this machine
+./scripts/install.sh
+siding version
+```
+
+### Windows (GitHub release)
+
+PowerShell will not run `siding` from the current folder (no implicit `.\`):
+
+```powershell
+Expand-Archive siding_*_windows_amd64.zip -DestinationPath siding-install
+cd siding-install
+.\siding.exe install
+siding version
+```
+
+### Windows (dev build of this repo)
 
 ```powershell
 cd C:\source\siding
@@ -12,7 +47,7 @@ cd C:\source\siding
 siding version
 ```
 
-That copies the exe to `%LOCALAPPDATA%\siding\bin` and puts it on your user PATH (and this session). New terminals pick it up automatically. See [Commands → install](COMMANDS.md#siding-install).
+Install details: [Commands → install](COMMANDS.md#siding-install). `install.sh` / `install.ps1` copy the binary, persist user PATH, and enable `siding` in **this** shell session.
 
 ## 1. Point at the app repo
 
