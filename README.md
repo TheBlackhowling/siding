@@ -30,7 +30,7 @@ Embedding in another Go CLI: [Library API](docs/LIBRARY.md) (`github.com/TheBlac
 
 Releases: [GitHub Releases](https://github.com/TheBlackhowling/siding/releases) on this repo. See [RELEASE.md](docs/RELEASE.md) for tagging and CI.
 
-macOS: use the `darwin_arm64` archive on Apple Silicon, `darwin_amd64` on Intel. Then `chmod +x siding && ./siding install` (updates `~/.zprofile` / `~/.zshrc` PATH like Windows). Release CI waits for notarization; if Gatekeeper blocks an older download, use **Right-click → Open** once.
+macOS: use the `darwin_arm64` archive on Apple Silicon, `darwin_amd64` on Intel. Extract, then `./install.sh` (or `chmod +x siding && ./siding install`). That copies to `~/.local/bin` and updates shell PATH like Windows. Release CI waits for notarization; if Gatekeeper blocks an older download, use **Right-click → Open** once on `siding`.
 
 Windows: unzip, then `siding install` (or use [install.ps1](scripts/install.ps1) from a dev build). PowerShell will not run `.\siding.exe` from the current directory by name - install puts it on PATH.
 

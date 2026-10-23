@@ -22,9 +22,9 @@ Assets per tag:
 
 | OS | Arch | Archive |
 |----|------|---------|
-| Windows | amd64, arm64 | `.zip` (`siding.exe`) |
-| macOS | amd64, arm64 | `.tar.gz` |
-| Linux | amd64, arm64 | `.tar.gz` |
+| Windows | amd64, arm64 | `.zip` (`siding.exe`; use `install.ps1` from the repo) |
+| macOS | amd64, arm64 | `.tar.gz` (includes `install.sh`) |
+| Linux | amd64, arm64 | `.tar.gz` (includes `install.sh`) |
 
 Checksums in `checksums.txt` (Ed25519 signature in `checksums.txt.sig`).
 Version/commit/date are stamped into `siding version`.

@@ -134,6 +134,7 @@ func printInstallPATHHelp(dest string, force bool) error {
 		printf("  %s\n", cyan("siding version"))
 		println(dim("(this session only, until you open a new shell)"))
 	}
+	println(dim("or run  ./install.sh  (release) or  ./scripts/install.sh  (dev)."))
 	return nil
 }
 
