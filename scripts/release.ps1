@@ -1,8 +1,8 @@
 # Cut the next GitHub Release on this repo.
 #
 # Finds the highest vMAJOR.MINOR.PATCH tag, increments it, tags HEAD, and
-# pushes. No prior tag → v0.1.0 (any bump). Then creates a GitHub Release
-# on this repo (generate-notes). The Release workflow publishes archives here (GoReleaser).
+# pushes. No prior tag → v0.1.0 (any bump). Then creates a draft GitHub Release
+# on this repo (generate-notes). CI uploads assets and publishes when checks pass.
 #
 #   .\scripts\release.ps1 patch
 #   .\scripts\release.ps1 minor
@@ -81,7 +81,7 @@ Write-Host "Next:     $tag  ($Bump)"
 
 if ($DryRun) {
     Write-Host "dry run: no tag created"
-    Write-Host "dry run: would create GitHub Release $tag on this repo (--generate-notes)"
+    Write-Host "dry run: would create draft GitHub Release $tag on this repo (--generate-notes --draft)"
     exit 0
 }
 
@@ -100,7 +100,8 @@ $ghArgs = @(
     "release", "create", $tag,
     "--repo", "TheBlackhowling/siding",
     "--title", "siding $tag",
-    "--generate-notes"
+    "--generate-notes",
+    "--draft"
 )
 if ($current) {
     $prev = "v$($current.Major).$($current.Minor).$($current.Build)"
@@ -136,7 +137,7 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 Write-Host ""
-Write-Host "Pushed $tag. Watch: https://github.com/TheBlackhowling/siding/actions"
-Write-Host "Notes:    https://github.com/TheBlackhowling/siding/releases/tag/$tag"
-Write-Host "Binaries: https://github.com/TheBlackhowling/siding/releases/tag/$tag"
+Write-Host "Pushed $tag. Release is a draft until CI publishes it."
+Write-Host "Watch:    https://github.com/TheBlackhowling/siding/actions"
+Write-Host "Draft:    https://github.com/TheBlackhowling/siding/releases/tag/$tag"
 Write-Host "Library:  go get github.com/TheBlackhowling/siding@$tag"

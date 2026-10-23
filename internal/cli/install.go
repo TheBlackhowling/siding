@@ -14,16 +14,16 @@ import (
 	"github.com/TheBlackhowling/siding/internal/update"
 )
 
-// addUserPath persists the bin dir on the Windows user PATH. Tests replace it
-// so `siding install` never touches the real registry.
-var addUserPath = addWindowsUserPath
+// addUserPath persists the bin dir on the user PATH (registry on Windows,
+// shell config on macOS/Linux). Set in install_windows.go / install_unix.go.
+var addUserPath func(string) error
 
 func installCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "install",
 		Short: "Copy this binary onto your PATH so PowerShell can run `siding`",
 		Long: `Install the current executable as "siding" in a user bin directory
-and, on Windows, add that directory to your user PATH.
+and add that directory to your user PATH (Windows registry or Unix shell config).
 
 PowerShell does not search the current folder. After install, prepend the
 bin dir to $env:Path in this session (or start a new Windows Terminal /
@@ -106,27 +106,35 @@ func replaceBinary(src, dest string) error {
 }
 
 func printInstallPATHHelp(dest string, force bool) error {
+	binDir := filepath.Dir(dest)
+	if err := addUserPath(binDir); err != nil {
+		return fmt.Errorf("could not update user PATH: %w", err)
+	}
+	printf("%s %s\n", dim("user PATH:"), green("updated"))
+
 	if runtime.GOOS == "windows" {
-		if err := addUserPath(filepath.Dir(dest)); err != nil {
-			return fmt.Errorf("could not update user PATH: %w", err)
-		}
-		printf("%s %s\n", dim("user PATH:"), green("updated"))
-		if !force && dirOnPATH(filepath.Dir(dest)) {
+		if !force && dirOnPATH(binDir) {
 			return nil
 		}
 		println("new Windows Terminal / cmd windows see `siding`.")
 		println(dim("IDE terminals keep the IDE's environment until the IDE restarts."))
 		println()
 		println(bold("this PowerShell session still needs:"))
-		printf("  %s\n", cyan(fmt.Sprintf("$env:Path = %q + ';' + $env:Path", filepath.Dir(dest))))
+		printf("  %s\n", cyan(fmt.Sprintf("$env:Path = %q + ';' + $env:Path", binDir)))
 		printf("  %s\n", cyan("siding version"))
 		println()
 		println(dim("or run  .\\scripts\\install.ps1  which does that for you."))
 		return nil
 	}
-	if force || !dirOnPATH(filepath.Dir(dest)) {
-		println(dim("ensure the directory is on PATH (often true for ~/.local/bin)."))
+
+	println("open a new terminal tab/window, then run `siding version`.")
+	println(dim("IDE terminals keep the IDE's environment until the IDE restarts."))
+	if force || !dirOnPATH(binDir) {
+		printf("  %s\n", cyan(fmt.Sprintf(`export PATH=%q:$PATH`, binDir)))
+		printf("  %s\n", cyan("siding version"))
+		println(dim("(this session only, until you open a new shell)"))
 	}
+	println(dim("or run  ./install.sh  (release) or  ./scripts/install.sh  (dev)."))
 	return nil
 }
 

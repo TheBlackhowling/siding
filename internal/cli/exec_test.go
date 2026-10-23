@@ -114,8 +114,8 @@ func TestInstallCommand(t *testing.T) {
 		if len(addedUserPaths) != 1 || addedUserPaths[0] != filepath.Dir(dest) {
 			t.Fatalf("user PATH update %v want %s", addedUserPaths, filepath.Dir(dest))
 		}
-	} else if len(addedUserPaths) != 0 {
-		t.Fatalf("no PATH edit off Windows: %v", addedUserPaths)
+	} else if len(addedUserPaths) != 1 || addedUserPaths[0] != filepath.Dir(dest) {
+		t.Fatalf("unix PATH update %v want %s", addedUserPaths, filepath.Dir(dest))
 	}
 	if !strings.Contains(out, "installed "+dest) {
 		t.Fatalf("install output missing dest:\n%s", out)
@@ -124,7 +124,7 @@ func TestInstallCommand(t *testing.T) {
 		if !strings.Contains(out, "user PATH: updated") || !strings.Contains(out, "$env:Path") {
 			t.Fatalf("windows install help:\n%s", out)
 		}
-	} else if !strings.Contains(out, "ensure the directory is on PATH") {
+	} else if !strings.Contains(out, "user PATH: updated") || !strings.Contains(out, "install.sh") {
 		t.Fatalf("unix install help:\n%s", out)
 	}
 }

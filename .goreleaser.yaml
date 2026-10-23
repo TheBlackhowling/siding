@@ -31,6 +31,11 @@ builds:
 archives:
   - formats: [tar.gz]
     name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    files:
+      - src: scripts/install.sh
+        dst: install.sh
+        info:
+          mode: 0755
     format_overrides:
       - goos: windows
         formats: [zip]
@@ -85,7 +90,7 @@ release:
   github:
     owner: TheBlackhowling
     name: siding
-  draft: false
+  draft: true
   prerelease: auto
   header: |
     CLI binaries for this tag. Download the archive for your OS.

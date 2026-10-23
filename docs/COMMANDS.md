@@ -46,7 +46,7 @@ No extra flags. See [Global](#global) for the optional newer-release notice.
 
 ## `siding install`
 
-Copy **this** executable to a user bin directory and, on Windows, add that directory to your user PATH.
+Copy **this** executable to a user bin directory and add that directory to your user PATH (Windows registry; macOS/Linux `~/.zprofile` and `~/.zshrc` or `~/.profile` / `~/.bashrc`).
 
 PowerShell does not search the current folder, so `siding` only works after the exe is on PATH (or you type `.\siding.exe`).
 
@@ -55,12 +55,24 @@ PowerShell does not search the current folder, so `siding` only works after the 
 | Windows | `%LOCALAPPDATA%\siding\bin\siding.exe` |
 | macOS / Linux | `~/.local/bin/siding` |
 
-The install process cannot change **this** PowerShell session’s PATH (a child process cannot). `.\scripts\install.ps1` does both: copy + this session + user PATH, so `siding version` works immediately.
+The install command cannot change **this** shell’s PATH (a child process cannot). Use the install scripts so the **current** session works immediately:
+
+| OS | Script |
+|----|--------|
+| Windows | `.\scripts\install.ps1` (dev) |
+| macOS / Linux | `./scripts/install.sh` (dev) or `./install.sh` inside a release archive |
+
+Both call `siding install` (copy + persist PATH), then prepend the bin dir for this session and run `siding version`.
 
 ```powershell
 .\docker\build.ps1
 .\scripts\install.ps1
 siding version
+```
+
+```bash
+./docker/build.ps1   # or download a release tarball
+./scripts/install.sh
 ```
 
 Equivalent without the script (new terminal afterward):
@@ -71,7 +83,13 @@ $env:Path = "$env:LOCALAPPDATA\siding\bin;" + $env:Path
 siding version
 ```
 
-No extra flags.
+```bash
+chmod +x siding && ./siding install
+export PATH="$HOME/.local/bin:$PATH"
+siding version
+```
+
+No extra flags on `siding install`.
 
 ---
 

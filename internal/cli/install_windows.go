@@ -12,6 +12,10 @@ import (
 	"golang.org/x/sys/windows/registry"
 )
 
+func init() {
+	addUserPath = addWindowsUserPath
+}
+
 // userEnvKeyPath is the HKCU key holding the user PATH. Tests point it at a
 // scratch key so they never edit the real environment.
 var userEnvKeyPath = `Environment`
