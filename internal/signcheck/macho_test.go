@@ -87,7 +87,7 @@ func TestGoreleaserNotarizeConfigured(t *testing.T) {
 		"MACOS_NOTARY_KEY",
 		"MACOS_NOTARY_KEY_ID",
 		"MACOS_NOTARY_ISSUER_ID",
-		"wait: false",
+		"wait: true",
 		"timeout: 20m",
 	} {
 		if !strings.Contains(s, want) {
