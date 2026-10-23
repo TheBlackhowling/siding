@@ -46,7 +46,7 @@ No extra flags. See [Global](#global) for the optional newer-release notice.
 
 ## `siding install`
 
-Copy **this** executable to a user bin directory and, on Windows, add that directory to your user PATH.
+Copy **this** executable to a user bin directory and add that directory to your user PATH (Windows registry; macOS/Linux `~/.zprofile` and `~/.zshrc` or `~/.profile` / `~/.bashrc`).
 
 PowerShell does not search the current folder, so `siding` only works after the exe is on PATH (or you type `.\siding.exe`).
 
