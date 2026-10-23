@@ -90,10 +90,15 @@ With Go installed locally: `go run ./scripts/gen-checksum-keypair -out .docker/c
 GoReleaser signs `checksums.txt` as `checksums.txt.sig`; `siding update`
 refuses releases that omit or fail signature verification.
 
-Apple notary JWTs last at most 20 minutes, so the job signs, submits both
-darwin binaries, and does not wait for Apple to finish. Waiting longer is
-rejected before sign starts. GoReleaser’s overall `--timeout` is 3 hours
-for the rest of the release (six archives, checksums, upload).
+GoReleaser waits up to **20 minutes** per darwin binary for notarization
+(`wait: true`, Apple’s JWT cap). Signed-but-not-notarized uploads trigger
+macOS Gatekeeper (“cannot verify…”) on downloaded tarballs. If notary times
+out, re-run the failed Release workflow on the same tag (or cut a patch tag);
+do not ship darwin assets from a job that logged `notarize still pending`
+and continued. GoReleaser’s overall `--timeout` is 3 hours for the full job.
+
+Bare Mach-O binaries cannot be stapled; after notarization, Gatekeeper uses
+an online ticket check (or Right-click → Open once).
 
 ## Cut a release
 

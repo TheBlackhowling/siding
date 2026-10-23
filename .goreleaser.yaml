@@ -76,9 +76,9 @@ notarize:
         issuer_id: '{{ envOrDefault "MACOS_NOTARY_ISSUER_ID" "" }}'
         key_id: '{{ envOrDefault "MACOS_NOTARY_KEY_ID" "" }}'
         key: '{{ envOrDefault "MACOS_NOTARY_KEY" "" }}'
-        # Apple JWT lifetime is 20m. wait:true plus a longer timeout is rejected
-        # before sign starts. Submit and continue; Gatekeeper can query Apple later.
-        wait: false
+        # Wait for Apple (max 20m JWT). Upload notarized darwin binaries so
+        # Gatekeeper accepts quarantined downloads. Re-run Release if Apple is slow.
+        wait: true
         timeout: 20m
 
 release:
