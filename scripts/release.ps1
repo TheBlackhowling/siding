@@ -93,13 +93,13 @@ if (git rev-parse -q --verify "refs/tags/$tag") {
     throw "tag $tag already exists"
 }
 
-git tag -a $tag -m "siding $tag"
+git tag -a $tag -m $tag
 git push origin $tag
 
 $ghArgs = @(
     "release", "create", $tag,
     "--repo", "TheBlackhowling/siding",
-    "--title", "siding $tag",
+    "--title", $tag,
     "--generate-notes",
     "--draft"
 )
