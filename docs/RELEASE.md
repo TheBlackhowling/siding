@@ -66,6 +66,13 @@ Both `.p12` and `.p8` must be base64. PowerShell:
 
 Do not commit those files.
 
+**Proxy board image (GHCR)** — optional `GHCR_PACKAGES_TOKEN`: fine-grained or
+classic PAT with **`write:packages`** on `ghcr.io/theblackhowling/siding-proxy`.
+The **Proxy image** workflow uses it when set; otherwise `GITHUB_TOKEN`. If CI
+logs `permission_denied: write_package`, either add this secret or in the org:
+Actions → General → **Read and write** workflow permissions, and link the
+`siding-proxy` package to this repo (Package → Settings → Manage Actions access).
+
 **Checksum signing** (`SIDING_CHECKSUM_SIGN_SEED`): 64-character hex encoding
 of a 32-byte Ed25519 seed. Generate a keypair (no local Go required):
 
