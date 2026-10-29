@@ -1,4 +1,5 @@
 # Board UI + Caddy. Published as ghcr.io/theblackhowling/siding-proxy:latest
+# (linux/amd64 + linux/arm64 via .github/workflows/proxy-image.yml)
 # Local smoke: docker build -t siding-proxy:local -f docker/proxy/Dockerfile .
 
 FROM node:22-alpine AS board
