@@ -89,6 +89,7 @@ func TestGoreleaserNotarizeConfigured(t *testing.T) {
 		"MACOS_NOTARY_ISSUER_ID",
 		"wait: true",
 		"timeout: 20m",
+		"use_existing_draft: true",
 	} {
 		if !strings.Contains(s, want) {
 			t.Errorf(".goreleaser.yaml missing %q", want)
